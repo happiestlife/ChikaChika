@@ -15,14 +15,14 @@ public class TeethSessionManager {
 
     private final String CAVITY_KEY = "cavity";
 
-    private final Map<String, boolean[]> teethInfo = new ConcurrentHashMap<>();
+    private final Map<String, Object> teethInfo = new ConcurrentHashMap<>();
 
-    public void setBrushedTeethInfo(boolean[] isTeethSectionBrushed){
+    public void setBrushedCnt(int[] isTeethSectionBrushed){
         teethInfo.put(BRUSHED_KEY, isTeethSectionBrushed);
     }
 
-    public boolean[] getBrushedTeethInfo(){
-        return teethInfo.get(BRUSHED_KEY);
+    public int[] getBrushedCnt(){
+        return (int[]) teethInfo.get(BRUSHED_KEY);
     }
 
     public void setTeethCavity(boolean[] isTeethSectionHasCavity){
@@ -30,7 +30,7 @@ public class TeethSessionManager {
     }
 
     public boolean[] getTeethCavity(){
-        return teethInfo.get(CAVITY_KEY);
+        return (boolean[]) teethInfo.get(CAVITY_KEY);
     }
 
 }

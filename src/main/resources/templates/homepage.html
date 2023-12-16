@@ -5,8 +5,55 @@
     <title>ChikaChika</title>
 </head>
 <body>
-    <h1>Hello world</h1>
-    <button id="sendMsgBtn">send message to me button</button>
+    <div class="container">
+        <div class="header">
+            <div class="btnContainer">
+                <button id="startBtn" class="btn">시작하기</button>
+                <button id="resetBtn" class="btn">초기화하기</button>
+            </div>
+            <h1 class="title">ChikaChika</h1>
+            <div class="guideContainer"></div>
+        </div>
+        <div class="teethContainer">
+            <div class="teethSection column">
+                <div id="section6" class="columnTeeth"></div>
+                <div id="section8" class="columnTeeth"></div>
+                <div id="section7" class="columnTeeth"></div>
+            </div>
+
+            <div class="teethSection row">
+                <div id="section1" class="rowTeeth"></div>
+                <div id="section2" class="rowTeeth"></div>
+                <div id="errorMsg" class="errorMsg" style="display: none"></div>
+            </div>
+
+            <div class="teethSection column">
+                <div id="section4" class="columnTeeth"></div>
+                <div id="section5" class="columnTeeth"></div>
+                <div id="section3" class="columnTeeth"></div>
+            </div>
+        </div>
+
+        <div class="teethContainer below">
+            <div class="teethSection column">
+                <div id="section14" class="columnTeeth"></div>
+                <div id="section16" class="columnTeeth"></div>
+                <div id="section15" class="columnTeeth"></div>
+            </div>
+
+            <div class="teethSection row">
+                <div id="section10" class="rowTeeth"></div>
+                <div id="section9" class="rowTeeth"></div>
+            </div>
+
+            <div class="teethSection column">
+                <div id="section12" class="columnTeeth"></div>
+                <div id="section13" class="columnTeeth"></div>
+                <div id="section11" class="columnTeeth"></div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="./js/socket.js"></script>
+<link rel="stylesheet" href="./css/style.css" type="text/css">
 </html>

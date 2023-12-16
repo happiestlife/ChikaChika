@@ -1,0 +1,76 @@
+.container {
+    width: 80%;
+    height: 1000px;
+    /*background-color: black;*/
+    margin: 20px auto;
+    border: thin solid black;
+}
+
+.container .header {
+    display: flex;
+}
+
+.container .header .btnContainer{
+    margin: 30px 40px;
+    width: 20%;
+}
+
+.container .header .title {
+    text-align: center;
+    width: 40%;
+}
+
+.container .header .guideContainer{
+    margin: 30px auto;
+    width: 30%;
+}
+
+
+.container .teethContainer {
+    height: 30%;
+    margin: 30px;
+    display: flex;
+}
+
+.container .teethContainer .teethSection {
+    margin: 10px;
+}
+
+.container .teethContainer .row {
+    display: block;
+    width: 70%;
+}
+
+.container .teethContainer .column {
+    display: flex;
+}
+
+.container .teethContainer .teethSection .columnTeeth {
+    width: 50px;
+    border: medium solid black;
+    background: white;
+}
+
+.container .teethContainer .teethSection .rowTeeth {
+    width: 80%;
+    height: 50px;
+    border: medium solid black;
+    background: white;
+    margin: 0px auto;
+}
+
+.container .teethContainer.below .teethSection.row{
+    padding: 170px 0px 0px 0px;
+}
+
+.container .teethContainer.below .teethSection.column{
+    padding: 30px 0px 0px 0px;
+}
+
+.errorMsg{
+    margin-top: 10px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    font-family: Arial;
+}

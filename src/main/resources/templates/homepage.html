@@ -9,47 +9,49 @@
         <div class="header">
             <div class="btnContainer">
                 <button id="startBtn" class="btn">시작하기</button>
-                <button id="resetBtn" class="btn">초기화하기</button>
+                <button id="resetBtn" class="btn">초기화</button>
+                <button id="testBtn" style="display: none">test</button>
             </div>
-            <h1 class="title">ChikaChika</h1>
+            <h1 class="title">양치질 분석기</h1>
             <div class="guideContainer"></div>
         </div>
         <div class="teethContainer">
             <div class="teethSection column">
-                <div id="section6" class="columnTeeth"></div>
-                <div id="section8" class="columnTeeth"></div>
-                <div id="section7" class="columnTeeth"></div>
+                <div id="ul_outside" class="columnTeeth teeth"></div>
+                <div id="ul_above" class="columnTeeth teeth"></div>
+                <div id="ul_inside" class="columnTeeth teeth"></div>
             </div>
 
             <div class="teethSection row">
-                <div id="section1" class="rowTeeth"></div>
-                <div id="section2" class="rowTeeth"></div>
-                <div id="errorMsg" class="errorMsg" style="display: none"></div>
+                <div id="uf_outside" class="rowTeeth teeth"></div>
+                <div id="uf_inside" class="rowTeeth teeth"></div>
+                <div id="errorMsg" class="errorMsg msg" style="display: none"></div>
+                <h2 id="alertMsg" class="msg" style="display: none">이빨 닦기 성공!!</h2>
             </div>
 
             <div class="teethSection column">
-                <div id="section4" class="columnTeeth"></div>
-                <div id="section5" class="columnTeeth"></div>
-                <div id="section3" class="columnTeeth"></div>
+                <div id="ur_inside" class="columnTeeth teeth"></div>
+                <div id="ur_above" class="columnTeeth teeth"></div>
+                <div id="ur_outside" class="columnTeeth teeth"></div>
             </div>
         </div>
 
         <div class="teethContainer below">
             <div class="teethSection column">
-                <div id="section14" class="columnTeeth"></div>
-                <div id="section16" class="columnTeeth"></div>
-                <div id="section15" class="columnTeeth"></div>
+                <div id="ll_outside" class="columnTeeth teeth"></div>
+                <div id="ll_above" class="columnTeeth teeth"></div>
+                <div id="ll_inside" class="columnTeeth teeth"></div>
             </div>
 
             <div class="teethSection row">
-                <div id="section10" class="rowTeeth"></div>
-                <div id="section9" class="rowTeeth"></div>
+                <div id="lf_inside" class="rowTeeth teeth"></div>
+                <div id="lf_outside" class="rowTeeth teeth"></div>
             </div>
 
             <div class="teethSection column">
-                <div id="section12" class="columnTeeth"></div>
-                <div id="section13" class="columnTeeth"></div>
-                <div id="section11" class="columnTeeth"></div>
+                <div id="lr_inside" class="columnTeeth teeth"></div>
+                <div id="lr_above" class="columnTeeth teeth"></div>
+                <div id="lr_outside" class="columnTeeth teeth"></div>
             </div>
         </div>
     </div>

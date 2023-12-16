@@ -69,8 +69,11 @@
 
 .errorMsg{
     margin-top: 10px;
-    text-align: center;
     color: red;
     font-weight: bold;
     font-family: Arial;
+}
+
+.msg{
+    text-align: center;
 }

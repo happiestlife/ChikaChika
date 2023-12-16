@@ -31,6 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
         SUCCESS: 'S',
         ERROR: 'E'
     };
+    const SECTION_CNT = 16;
+
+    let _webSocket;
+    let _brushCompleteSectionCnt = 0;
 
     function init() {
         // 1. 상수화
@@ -45,21 +49,70 @@ document.addEventListener("DOMContentLoaded", () => {
     function initEvent() {
         const startBtn = document.querySelector('#startBtn');
         const resetBtn = document.querySelector('#resetBtn');
+        const testBtn = document.querySelector('#testBtn');
 
-        startBtn.addEventListener('click', (e) => {
-            const webSocket = new WebSocket("ws://127.0.0.1:8080/api/connect");
-            webSocket.addEventListener("open", () => {
+        startBtn.addEventListener('click', connectToWebSocket);
+
+        resetBtn.addEventListener('click', async () => {
+            const teethTags = document.querySelectorAll('.teeth');
+            teethTags.forEach((t) => {
+                t.style.setProperty('background-color', 'white');
+            });
+
+            const alertMsgTag = document.querySelector('#alertMsg');
+            hide(alertMsgTag);
+
+            _brushCompleteSectionCnt = 0;
+
+            await fetch('http://localhost:8080/api/reset', {
+                method: 'POST'
+            }).then(res => {
+                alert('reset success!');
+            });
+        });
+
+        testBtn.addEventListener('click', async () => {
+            const teethTagIds = ["uf_outside", "uf_inside",
+                "ur_outside", "ur_inside", "ur_above",
+                "ul_outside", "ul_inside", "ul_above",
+                "lf_outside", "lf_inside",
+                "lr_outside", "lr_inside", "lr_above",
+                "ll_outside", "ll_inside", "ll_above"];
+
+            for (const id of teethTagIds) {
+                console.log(id);
+                await fetch('http://localhost:8080/api/teeth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        brushedSection: id,
+                        brushedCnt: 10
+                    }),
+                });
+            }
+        });
+
+
+        function connectToWebSocket() {
+            if(!!_webSocket){
+                _webSocket.close();
+            }
+
+            _webSocket = new WebSocket("ws://127.0.0.1:8080/api/connect");
+            _webSocket.addEventListener("open", () => {
                 console.log("web socket open!");
             });
-            webSocket.addEventListener("close", () => {
+            _webSocket.addEventListener("close", () => {
                 console.log("web socket closed...");
             });
-            webSocket.addEventListener("error", (e) => {
+            _webSocket.addEventListener("error", (e) => {
                 console.log(e);
                 alert("Connection with server is failed... Please refresh your browser and try again.");
             });
 
-            console.log(webSocket)
+            console.log(_webSocket)
 
             /**
              * msg.data 형식
@@ -70,9 +123,10 @@ document.addEventListener("DOMContentLoaded", () => {
              *     brushedLevel: {int}
              * }
              */
-            webSocket.addEventListener("message", (msg) => {
+            _webSocket.addEventListener("message", (msg) => {
                 console.log("Server send message!");
 
+                const alertMsgTag = document.querySelector('#alertMsg');
                 const errorMsgDv = document.querySelector('#errorMsg');
                 const data = JSON.parse(msg.data);
                 console.log(data);
@@ -81,27 +135,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     hide(errorMsgDv);
                     errorMsgDv.innerHTML =  '';
 
-                    const sectionDv = document.querySelector(`#section${data.brushedSection}`);
+                    const sectionDv = document.querySelector(`#${data.brushedSection}`);
                     Object.keys(BrushedLevel).forEach(key => {
                         if(BrushedLevel[key].level == data.brushedLevel){
                             sectionDv.style.setProperty('background-color', BrushedLevel[key].color);
+                            if(BrushedLevel[key].level == BrushedLevel.COMPLETE.level){
+                                _brushCompleteSectionCnt++;
+                            }
                         }
                     });
+
+                    if (_brushCompleteSectionCnt == SECTION_CNT) {
+                        show(alertMsgTag);
+                    }
+                    else{
+                        hide(alertMsgTag);
+                    }
                 }
                 else{
                     errorMsgDv.innerHTML = data.errorMsg;
                     show(errorMsgDv);
+
+                    hide(alertMsgTag);
                 }
             });
-        });
-
-        resetBtn.addEventListener('click', async () => {
-            await fetch('http://localhost:8080/api/reset', {
-                method: 'POST'
-            }).then(res => {
-                alert('reset success!');
-            });
-        });
+        }
     }
 
     init();

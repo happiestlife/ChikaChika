@@ -1,21 +1,28 @@
 package com.cheese.ChikaChika.configuration;
 
 import com.cheese.ChikaChika.model.Teeth;
+import com.cheese.ChikaChika.service.TeethBrushedService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomWebSocketHandler extends TextWebSocketHandler {
 
+    private final TeethBrushedService teethBrushedService;
+    
     private WebSocketSession session;
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("[{}] Web socket connected!", session.getId());
 
         this.session = session;
+        teethBrushedService.resetBrushedInfo();
 
         super.afterConnectionEstablished(session);
     }

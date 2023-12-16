@@ -33,4 +33,7 @@ public class TeethSessionManager {
         return (boolean[]) teethInfo.get(CAVITY_KEY);
     }
 
+    public void resetBrushedCnt() {
+        teethInfo.remove(BRUSHED_KEY);
+    }
 }

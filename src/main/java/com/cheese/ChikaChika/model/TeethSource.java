@@ -1,11 +1,11 @@
 package com.cheese.ChikaChika.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class TeethSource {
-
-    public final static int SECTION_CNT = 16;
-
-    private final int[] teethBrushedSectionCnt;
+    private String brushedSection;
+    private int brushedCnt;
 }

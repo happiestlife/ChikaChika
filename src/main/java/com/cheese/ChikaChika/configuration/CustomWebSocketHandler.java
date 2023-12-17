@@ -1,5 +1,8 @@
 package com.cheese.ChikaChika.configuration;
 
+import com.cheese.ChikaChika.consts.Consts;
+import com.cheese.ChikaChika.consts.Message;
+import com.cheese.ChikaChika.consts.ResponseStatus;
 import com.cheese.ChikaChika.model.Teeth;
 import com.cheese.ChikaChika.service.TeethBrushedService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +26,16 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
 
         this.session = session;
         teethBrushedService.resetBrushedInfo();
+
+        String firstBrushSection = Consts.BRUSH_SECTION.UF_OUTSIDE;
+        Teeth teeth = new Teeth(ResponseStatus.SUCCESS.getLevel(), Message.getMessage(Message.Group.NEXT_BRUSH_SECTION, firstBrushSection),
+                "start", Consts.BRUSH_LEVEL.NONE, firstBrushSection);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String messageBody = objectMapper.writeValueAsString(teeth);
+        WebSocketMessage message = new TextMessage(messageBody);
+
+        session.sendMessage(message);
 
         super.afterConnectionEstablished(session);
     }

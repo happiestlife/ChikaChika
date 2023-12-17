@@ -53,6 +53,9 @@ public class ApiController {
             if (nextBrushSection.equals("COMPLETE")) {
                 message = Message.getMessage(Message.Group.COMPLETE_FLAG, Consts.COMPLETE_FLAG.Y);
             }
+            else if(brushedLevel == Consts.BRUSH_LEVEL.COMPLETE){
+                message += "\n" + Message.getMessage(Message.Group.NEXT_BRUSH_SECTION, nextBrushSection);
+            }
 
             response = new Teeth(ResponseStatus.SUCCESS.getLevel(), message,
                     brushedSection, brushedLevel, nextBrushSection);

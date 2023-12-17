@@ -32,6 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
         ERROR: 'E'
     };
 
+    const _section = {
+        ulTeeth: document.querySelector('#ulTeeth'),
+        ufTeeth: document.querySelector('#ufTeeth'),
+        urTeeth: document.querySelector('#urTeeth'),
+        llTeeth: document.querySelector('#llTeeth'),
+        lfTeeth: document.querySelector('#lfTeeth'),
+        lrTeeth: document.querySelector('#lrTeeth')
+    };
     const _alertMsgTag = document.querySelector('#alertMsg');
     const _errorMsgDv = document.querySelector('#errorMsg');
 
@@ -44,7 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
             Object.freeze(c);
         });
 
+        // 2. 이벤트 초기화
         initEvent();
+
+        // 3. 이빨 하이라이트 부분 숨기기
+        Object.keys(_section).forEach(key => {
+            hide(_section[key]);
+        });
     }
 
     function initEvent() {
@@ -136,11 +150,33 @@ document.addEventListener("DOMContentLoaded", () => {
                     show(_alertMsgTag);
 
                     const sectionDv = document.querySelector(`#${data.brushedSection}`);
-                    Object.keys(BrushedLevel).forEach(key => {
-                        if(BrushedLevel[key].level == data.brushedLevel){
-                            sectionDv.style.setProperty('background-color', BrushedLevel[key].color);
-                        }
-                    });
+                    if(!!sectionDv) {
+                        Object.keys(BrushedLevel).forEach(key => {
+                            if (BrushedLevel[key].level == data.brushedLevel) {
+                                sectionDv.style.setProperty('background-color', BrushedLevel[key].color);
+                            }
+                        });
+                    }
+
+                    if (data.brushedSection != data.nextBrushSection) {
+                        const nxtSectionPrefix = data.nextBrushSection.substring(0, 2);
+                        console.log(data.brushedSection, data.nextBrushSection)
+                        console.log(nxtSectionPrefix)
+                        Object.keys(_section).forEach((key) => {
+                            console.log(key, key.startsWith(nxtSectionPrefix))
+                            if (key.startsWith(nxtSectionPrefix)) {
+                                show(_section[key]);
+                            }
+                            else{
+                                hide(_section[key]);
+                            }
+                        });
+                    }
+                    else{
+                        Object.keys(_section).forEach((key) => {
+                            hide(_section[key]);
+                        });
+                    }
                 }
                 else{
                     _errorMsgDv.innerHTML = data.msg;

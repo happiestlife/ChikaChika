@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TeethBrushedService {
 
-    private final String[] BRUSH_ORDER = {"uf_outside", "uf_inside",
-            "ur_outside", "ur_inside", "ur_above",
-            "ul_outside", "ul_inside", "ul_above",
-            "lf_outside", "lf_inside",
-            "lr_outside", "lr_inside", "lr_above",
-            "ll_outside", "ll_inside", "ll_above"};
+    private final String[] BRUSH_ORDER = {
+            Consts.BRUSH_SECTION.UF_OUTSIDE, Consts.BRUSH_SECTION.UF_INSIDE,
+            Consts.BRUSH_SECTION.UR_OUTSIDE, Consts.BRUSH_SECTION.UR_INSIDE, Consts.BRUSH_SECTION.UR_ABOVE,
+            Consts.BRUSH_SECTION.UL_OUTSIDE, Consts.BRUSH_SECTION.UL_INSIDE, Consts.BRUSH_SECTION.UL_ABOVE,
+            Consts.BRUSH_SECTION.LF_OUTSIDE, Consts.BRUSH_SECTION.LF_INSIDE,
+            Consts.BRUSH_SECTION.LR_OUTSIDE, Consts.BRUSH_SECTION.LR_INSIDE, Consts.BRUSH_SECTION.LR_ABOVE,
+            Consts.BRUSH_SECTION.LL_OUTSIDE, Consts.BRUSH_SECTION.LL_INSIDE, Consts.BRUSH_SECTION.LL_ABOVE
+    };
 
     private final TeethSessionManager teethSession;
 

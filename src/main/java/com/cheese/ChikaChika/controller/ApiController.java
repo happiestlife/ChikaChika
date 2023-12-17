@@ -1,6 +1,7 @@
 package com.cheese.ChikaChika.controller;
 
 import com.cheese.ChikaChika.configuration.CustomWebSocketHandler;
+import com.cheese.ChikaChika.consts.*;
 import com.cheese.ChikaChika.consts.ResponseStatus;
 import com.cheese.ChikaChika.model.Teeth;
 import com.cheese.ChikaChika.model.TeethSource;
@@ -39,11 +40,24 @@ public class ApiController {
         // 2. 해당 데이터를 웹에 업데이트
         Teeth response;
         if (saveSuccess) {
-            int brushedLevel = teethBrushedService.getTeethSectionBrushedLevel(source.getBrushedSection());
+            String brushedSection = source.getBrushedSection();
 
-            response = new Teeth(ResponseStatus.SUCCESS.getLevel(), source.getBrushedSection(), brushedLevel);
+            String brushedLevel = teethBrushedService.getTeethSectionBrushedLevel(brushedSection);
+
+            String nextBrushSection = brushedSection;
+            if(brushedLevel == Consts.BRUSH_LEVEL.COMPLETE){
+                nextBrushSection = teethBrushedService.getNextBrushSection(brushedSection);
+            }
+
+            String message = Message.getMessage(Message.Group.BRUSH_LEVEL, brushedLevel);
+            if (nextBrushSection.equals("COMPLETE")) {
+                message = Message.getMessage(Message.Group.COMPLETE_FLAG, Consts.COMPLETE_FLAG.Y);
+            }
+
+            response = new Teeth(ResponseStatus.SUCCESS.getLevel(), message,
+                    brushedSection, brushedLevel, nextBrushSection);
         } else {
-            response = new Teeth(ResponseStatus.ERROR.getLevel(), "올바른 동작으로 닦아주세요.");
+            response = new Teeth(ResponseStatus.ERROR.getLevel(), Message.getMessage(Message.Group.ERROR, Consts.ERROR_CODE.NOT_FOLLOW_ORDER));
         }
 
         if (webSocket.sendMessage(response)) {

@@ -11,19 +11,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const BrushedLevel = {
         NONE: {
-            level: 0,
+            level: 'NONE',
             color: '#FFFFFFFF'
         },
         LITTLE: {
-            level: 1,
+            level: 'LITTLE',
             color: '#F0F8FFFF'
         },
         MEDIUM: {
-            level: 2,
+            level: 'MEDIUM',
             color: '#87CEFAFF'
         },
         COMPLETE: {
-            level: 3,
+            level: 'COMPLETE',
             color: '#1E90FFFF'
         }
     };
@@ -31,10 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         SUCCESS: 'S',
         ERROR: 'E'
     };
-    const SECTION_CNT = 16;
+
+    const _alertMsgTag = document.querySelector('#alertMsg');
+    const _errorMsgDv = document.querySelector('#errorMsg');
 
     let _webSocket;
-    let _brushCompleteSectionCnt = 0;
 
     function init() {
         // 1. 상수화
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initEvent() {
         const startBtn = document.querySelector('#startBtn');
         const resetBtn = document.querySelector('#resetBtn');
-        const testBtn = document.querySelector('#testBtn');
+        const testBtn  = document.querySelector('#testBtn');
 
         startBtn.addEventListener('click', connectToWebSocket);
 
@@ -59,10 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 t.style.setProperty('background-color', 'white');
             });
 
-            const alertMsgTag = document.querySelector('#alertMsg');
-            hide(alertMsgTag);
-
-            _brushCompleteSectionCnt = 0;
+            hide(_alertMsgTag);
 
             await fetch('http://localhost:8080/api/reset', {
                 method: 'POST'
@@ -117,46 +115,38 @@ document.addEventListener("DOMContentLoaded", () => {
             /**
              * msg.data 형식
              * {
-             *     status: {char} s / e,
-             *     errorMsg: {string},
-             *     brushedSection: {int},
-             *     brushedLevel: {int}
+             *     status: {string} s / e,
+             *     msg: {string},
+             *     brushedSection: {string},
+             *     brushedLevel: {string},
+             *     nextBrushSection: {string}
              * }
              */
             _webSocket.addEventListener("message", (msg) => {
                 console.log("Server send message!");
 
-                const alertMsgTag = document.querySelector('#alertMsg');
-                const errorMsgDv = document.querySelector('#errorMsg');
                 const data = JSON.parse(msg.data);
                 console.log(data);
 
                 if(data.status == Status.SUCCESS){
-                    hide(errorMsgDv);
-                    errorMsgDv.innerHTML =  '';
+                    hide(_errorMsgDv);
+                    _errorMsgDv.innerHTML =  '';
+
+                    _alertMsgTag.innerHTML = data.msg ?? '';
+                    show(_alertMsgTag);
 
                     const sectionDv = document.querySelector(`#${data.brushedSection}`);
                     Object.keys(BrushedLevel).forEach(key => {
                         if(BrushedLevel[key].level == data.brushedLevel){
                             sectionDv.style.setProperty('background-color', BrushedLevel[key].color);
-                            if(BrushedLevel[key].level == BrushedLevel.COMPLETE.level){
-                                _brushCompleteSectionCnt++;
-                            }
                         }
                     });
-
-                    if (_brushCompleteSectionCnt == SECTION_CNT) {
-                        show(alertMsgTag);
-                    }
-                    else{
-                        hide(alertMsgTag);
-                    }
                 }
                 else{
-                    errorMsgDv.innerHTML = data.errorMsg;
-                    show(errorMsgDv);
+                    _errorMsgDv.innerHTML = data.msg;
+                    show(_errorMsgDv);
 
-                    hide(alertMsgTag);
+                    hide(_alertMsgTag);
                 }
             });
         }

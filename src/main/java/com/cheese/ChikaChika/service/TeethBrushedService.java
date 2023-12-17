@@ -1,7 +1,7 @@
 package com.cheese.ChikaChika.service;
 
 import com.cheese.ChikaChika.consts.BrushedLevel;
-import com.cheese.ChikaChika.consts.WebConsts;
+import com.cheese.ChikaChika.consts.Consts;
 import com.cheese.ChikaChika.model.TeethSource;
 import com.cheese.ChikaChika.util.TeethSessionManager;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TeethBrushedService {
-
-    private final int SECTION_CNT = 16 + 1;
 
     private final String[] BRUSH_ORDER = {"uf_outside", "uf_inside",
             "ur_outside", "ur_inside", "ur_above",
@@ -27,29 +25,29 @@ public class TeethBrushedService {
      * 현재 session에 저장되어 있던 각 이빨 구역의 닦임 횟수에 따라 UI로 어떻게 표현될 지에 대해서 코드 반환
      * @return WebConsts.BRUSHED_LEVEL
      */
-    public int[] getTeethSectionBrushedLevel(){
+    public String[] getTeethSectionBrushedLevel(){
         final int littleLevel = BrushedLevel.LITTLE.getLevel();
         final int mediumLevel = BrushedLevel.MEDIUM.getLevel();
         final int completeLevel = BrushedLevel.COMPLETE.getLevel();
 
         int[] brushedCnt = teethSession.getBrushedCnt();
-        int[] webBrushedLevel = new int[brushedCnt.length];
+        String[] webBrushedLevel = new String[brushedCnt.length];
         for (int i = 0; i < webBrushedLevel.length; i++) {
             if(brushedCnt[i] < littleLevel){
-                webBrushedLevel[i] = WebConsts.BRUSHED_LEVEL.NONE;
+                webBrushedLevel[i] = Consts.BRUSH_LEVEL.NONE;
             } else if (littleLevel <= brushedCnt[i] && brushedCnt[i] < mediumLevel) {
-                webBrushedLevel[i] = WebConsts.BRUSHED_LEVEL.LITTLE;
+                webBrushedLevel[i] = Consts.BRUSH_LEVEL.LITTLE;
             } else if (mediumLevel <= brushedCnt[i] && brushedCnt[i] < completeLevel) {
-                webBrushedLevel[i] = WebConsts.BRUSHED_LEVEL.MEDIUM;
+                webBrushedLevel[i] = Consts.BRUSH_LEVEL.MEDIUM;
             } else {
-                webBrushedLevel[i] = WebConsts.BRUSHED_LEVEL.COMPLETE;
+                webBrushedLevel[i] = Consts.BRUSH_LEVEL.COMPLETE;
             }
         }
 
         return webBrushedLevel;
     }
 
-    public int getTeethSectionBrushedLevel(String section){
+    public String getTeethSectionBrushedLevel(String section){
         final int littleLevel = BrushedLevel.LITTLE.getLevel();
         final int mediumLevel = BrushedLevel.MEDIUM.getLevel();
         final int completeLevel = BrushedLevel.COMPLETE.getLevel();
@@ -57,16 +55,16 @@ public class TeethBrushedService {
         int order = getSectionBrushOrderIdx(section);
         int brushedCnt = teethSession.getBrushedCnt()[order];
         if(brushedCnt < littleLevel){
-            return WebConsts.BRUSHED_LEVEL.NONE;
+            return Consts.BRUSH_LEVEL.NONE;
         }
         else if (littleLevel <= brushedCnt && brushedCnt < mediumLevel) {
-            return WebConsts.BRUSHED_LEVEL.LITTLE;
+            return Consts.BRUSH_LEVEL.LITTLE;
         }
         else if (mediumLevel <= brushedCnt && brushedCnt < completeLevel) {
-            return WebConsts.BRUSHED_LEVEL.MEDIUM;
+            return Consts.BRUSH_LEVEL.MEDIUM;
         }
         else {
-            return WebConsts.BRUSHED_LEVEL.COMPLETE;
+            return Consts.BRUSH_LEVEL.COMPLETE;
         }
     }
 
@@ -80,7 +78,7 @@ public class TeethBrushedService {
     public boolean setTeethSectionBrushedLevel(TeethSource brushedTeethSectionCnt){
         int[] teethSectionBrushedCnt = teethSession.getBrushedCnt();
         if(teethSectionBrushedCnt == null){
-            teethSectionBrushedCnt = new int[SECTION_CNT];
+            teethSectionBrushedCnt = new int[BRUSH_ORDER.length];
         }
 
         int curBrushedSectionIdx = getSectionBrushOrderIdx(brushedTeethSectionCnt.getBrushedSection());
@@ -109,7 +107,7 @@ public class TeethBrushedService {
     public int getNeedToBrushSectionIdx() {
         int[] teethSectionBrushedCnt = teethSession.getBrushedCnt();
         if(teethSectionBrushedCnt == null){
-            teethSectionBrushedCnt = new int[SECTION_CNT];
+            teethSectionBrushedCnt = new int[BRUSH_ORDER.length];
         }
 
         int lastBrushCompletedIdx = -1;
@@ -127,6 +125,20 @@ public class TeethBrushedService {
 
     public void resetBrushedInfo(){
         teethSession.resetBrushedCnt();
+    }
+
+    /**
+     * 다음에 닦아야 할 section의 명칭 반환
+     * @param section
+     * @return 다음 section의 명칭, 인자로 전달된 section이 마지막 section이었다면 COMPLETE 반환
+     */
+    public String getNextBrushSection(String section){
+        int idx = getSectionBrushOrderIdx(section);
+        if(idx == BRUSH_ORDER.length - 1){
+            return "COMPLETE";
+        }
+
+        return BRUSH_ORDER[idx + 1];
     }
 
     private int getSectionBrushOrderIdx(String section){
